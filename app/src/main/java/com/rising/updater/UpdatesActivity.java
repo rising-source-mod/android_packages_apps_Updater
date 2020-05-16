@@ -42,6 +42,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -137,6 +138,9 @@ public class UpdatesActivity extends UpdatesListActivity {
                 }
             }
         };
+
+        updateSupportView();
+
         headerTitle = findViewById(R.id.app_bar);
 
         ImageButton mainIcon = findViewById(R.id.launchSettings);
@@ -265,6 +269,7 @@ public class UpdatesActivity extends UpdatesListActivity {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             long millis = System.currentTimeMillis();
             preferences.edit().putLong(Constants.PREF_LAST_UPDATE_CHECK, millis).apply();
+            updateSupportView();
             if (json.exists() && Utils.isUpdateCheckEnabled(this) &&
                     Utils.checkForNewUpdates(json, jsonNew)) {
                 UpdatesCheckReceiver.updateRepeatingUpdatesCheck(this);
@@ -327,6 +332,47 @@ public class UpdatesActivity extends UpdatesListActivity {
 
         refreshAnimationStart();
         downloadClient.start();
+    }
+
+    private void updateSupportView() {
+        updateMaintainerView();
+        updateSupportImageView(R.id.support_forum, Utils.getForum());
+        updateSupportImageView(R.id.support_telegram, Utils.getTelegram());
+        updateSupportImageView(R.id.support_recovery, Utils.getRecovery());
+        updateSupportImageView(R.id.support_paypal, Utils.getPaypal());
+        updateSupportImageView(R.id.support_gapps, Utils.getGapps());
+        updateSupportImageView(R.id.support_firmware, Utils.getFirmware());
+        updateSupportImageView(R.id.support_modem, Utils.getModem());
+        updateSupportImageView(R.id.support_bootloader, Utils.getBootloader());
+    }
+
+    private void updateMaintainerView() {
+        TextView maintainerName = findViewById(R.id.maintainer_name);
+        String maintainer = Utils.getMaintainer();
+        if (maintainer == null || maintainer.isEmpty()) {
+            maintainerName.setVisibility(View.GONE);
+        } else {
+            maintainerName.setText(getString(R.string.maintainer_name, maintainer));
+            maintainerName.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void updateSupportImageView(int imageViewId, String url) {
+        ImageView imageView = findViewById(imageViewId);
+        if (url == null || url.isEmpty()) {
+            imageView.setVisibility(View.GONE);
+        } else {
+            imageView.setVisibility(View.VISIBLE);
+            imageView.setOnClickListener(v -> openUrlInBrowser(url));
+        }
+    }
+
+    private void openUrlInBrowser(String url) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     private void handleDownloadStatusChange(String downloadId) {
