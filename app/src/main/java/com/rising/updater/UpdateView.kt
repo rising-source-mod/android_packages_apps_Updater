@@ -38,6 +38,7 @@ import com.rising.updater.misc.BuildInfoUtils
 import com.rising.updater.misc.Constants
 import com.rising.updater.misc.StringGenerator
 import com.rising.updater.misc.Utils
+import com.rising.updater.model.Update
 import com.rising.updater.model.UpdateInfo
 import com.rising.updater.model.UpdateStatus
 import java.io.File
@@ -62,6 +63,7 @@ class UpdateView : LinearLayout {
     private var mUpdaterController: UpdaterController? = null
     private var mActivity: UpdatesListActivity? = null
     private var infoDialog: AlertDialog? = null
+    private var mDownloadIds: MutableList<String>? = null
 
     private var actionListener: onActionChanged = null
 
@@ -125,6 +127,14 @@ class UpdateView : LinearLayout {
     fun unleashTheBunny(resID: Int) {
         requireViewById<TextView>(R.id.easterBunny).setText(resID)
         Handler().postDelayed({ requireViewById<TextView>(R.id.easterBunny).setText(R.string.maybe_later) }, 2000)
+    }
+
+    fun addItem(downloadId: String) {
+        if (mDownloadIds == null) {
+            mDownloadIds = ArrayList()
+        }
+        mDownloadIds!!.add(0, downloadId)
+        lateInit()
     }
 
     fun lateInit() {
@@ -267,20 +277,12 @@ class UpdateView : LinearLayout {
     }
 
     private fun hideEverythingBut(view: View) {
-        if (view.id != actionCheck.id)
-            actionCheck.visibility = View.GONE
-        if (view.id != actionInstall.id)
-            actionInstall.visibility = View.GONE
-        if (view.id != actionOptions.id)
-            actionOptions.visibility = View.GONE
-        if (view.id != actionProgress.id)
-            actionProgress.visibility = View.GONE
-        if (view.id != actionReboot.id)
-            actionReboot.visibility = View.GONE
-        if (view.id != actionStart.id)
-            actionStart.visibility = View.GONE
-        if (view.id != actionDelete.id)
-            actionDelete.visibility = View.GONE
+        val viewsToHide = listOf(actionCheck, actionInstall, actionOptions, actionProgress, actionReboot, actionStart, actionDelete)
+        viewsToHide.forEach {
+            if (it.id != view.id) {
+                it.visibility = View.GONE
+            }
+        }
     }
 
     private fun parseChangelog() {
@@ -317,12 +319,21 @@ class UpdateView : LinearLayout {
         mAlphaDisabledValue = tv.float
     }
 
+    fun updateProgress(downloadId: String, progress: Int) {
+        val update = mUpdaterController!!.getUpdate(downloadId)
+        if (update != null) {
+            actionProgressBar.progress = progress
+            val percentage = NumberFormat.getPercentInstance().format((progress / 100f).toDouble())
+            actionProgressText.text = "$percentage"
+        }
+    }
+
     private fun handleActiveStatus(update: UpdateInfo) {
         var canDelete = false
         val downloadId = update.downloadId
         when {
             mUpdaterController!!.isDownloading(downloadId) -> {
-                actionStart.visibility = GONE
+                hideEverythingBut(actionProgress)
                 actionProgress.visibility = VISIBLE
                 canDelete = true
                 val downloaded = Formatter.formatShortFileSize(mActivity,
@@ -345,6 +356,7 @@ class UpdateView : LinearLayout {
                 actionProgressText.text = "$percentage"
             }
             mUpdaterController!!.isInstallingUpdate(downloadId) -> {
+                hideEverythingBut(actionProgress)
                 actionProgress.visibility = VISIBLE
                 setButtonAction(actionProgressPause, Action.PAUSE, true)
                 val notAB = !mUpdaterController!!.isInstallingABUpdate
@@ -356,10 +368,25 @@ class UpdateView : LinearLayout {
                 actionProgressText.text = "$percentage"
             }
             mUpdaterController!!.isVerifyingUpdate(downloadId) -> {
+                hideEverythingBut(actionProgress)
                 actionProgress.visibility = VISIBLE
                 actionProgressStats.setText(R.string.list_verifying_update)
                 actionProgressBar.isIndeterminate = true
                 actionProgressPause.isEnabled = false
+            }
+            update.status == UpdateStatus.INSTALLED -> {
+                hideEverythingBut(actionReboot)
+                actionReboot.visibility = VISIBLE
+                setButtonAction(actionRebootButton, Action.REBOOT, true)
+            }
+            downloadId == Update.LOCAL_ID -> {
+                hideEverythingBut(actionProgress)
+                actionProgress.visibility = VISIBLE
+                val percentage = NumberFormat.getPercentInstance().format((update.installProgress / 100f).toDouble())
+                actionProgressStats.setText(R.string.installing_update)
+                actionProgressBar.isIndeterminate = false
+                actionProgressBar.progress = update.installProgress
+                actionProgressText.text = "$percentage"
             }
             else -> {
                 actionProgress.visibility = GONE

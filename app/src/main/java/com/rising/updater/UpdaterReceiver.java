@@ -28,6 +28,7 @@ import android.os.SystemProperties;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
+import com.rising.updater.controller.UpdaterController;
 import com.rising.updater.misc.BuildInfoUtils;
 import com.rising.updater.misc.Constants;
 import com.rising.updater.misc.StringGenerator;
@@ -97,6 +98,8 @@ public class UpdaterReceiver extends BroadcastReceiver {
                 pref.edit().putBoolean(Constants.PREF_INSTALL_NOTIFIED, true).apply();
                 showUpdateFailedNotification(context);
             }
+
+            UpdaterController.getInstance(context).checkForPendingDeletions();
         }
     }
 }

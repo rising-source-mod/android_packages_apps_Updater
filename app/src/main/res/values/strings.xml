@@ -53,7 +53,7 @@
     <string name="installing_update">Installing update package</string>
     <string name="installing_update_error">Install error</string>
     <string name="installing_update_finished">Update installed</string>
-    <string name="finalizing_package">Finalizing package installation</string>
+    <string name="finalizing_package">Finalizing installation</string>
     <string name="preparing_ota_first_boot">Preparing for first boot</string>
     <string name="dialog_prepare_zip_message">Preliminary update preparation</string>
     <string name="dialog_battery_low_title">Low battery</string>
@@ -96,6 +96,7 @@
     <string name="snack_download_verified">Download completed.</string>
 
     <string name="snack_update_not_installable">This update can\'t be installed on top of the current build.</string>
+    <string name="snack_installation_complete">Installation complete</string>
 
     <string name="header_title_text">risingOS\n%1$s</string>
     <string name="header_android_version">Android <xliff:g id="version" example="7.1.2">%1$s</xliff:g></string>
@@ -175,4 +176,11 @@
     <string name="update_notes">∘ Keep your phone connected to a network throughout the update.\n∘ Make sure your device has at least 30% battery.\n∘ Do not use your phone or device until the update is complete.</string>
 
     <string name="maintainer_name">Maintainer: <xliff:g id="maintainer" example="Maintainer Name">%1$s</xliff:g></string>
+
+    <string name="local_update_import">Local update</string>
+    <string name="local_update_import_progress">Importing local update\u2026</string>
+    <string name="local_update_import_success">%1$s has been imported. Do you want to install it?</string>
+    <string name="local_update_import_failure">Failed to import local update</string>
+    <string name="local_update_import_install">Install</string>
+    <string name="local_update_name">Local update</string>
 </resources>
