@@ -33,7 +33,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "org.lineageos.updater"
+        applicationId = "com.rising.updater"
         minSdk = 30
         targetSdk = 33
         versionCode = 1
