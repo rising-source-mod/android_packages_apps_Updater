@@ -79,7 +79,7 @@
     <string name="toast_forced_update_recovery">It is impossible to disable risingOS Recovery updates on this device.</string>
 
     <string name="snack_updates_found">New updates found</string>
-    <string name="snack_no_updates_found">No new updates found</string>
+    <string name="snack_no_updates_found">No updates found</string>
     <string name="snack_updates_check_failed">The update check failed. Please check your internet connection and try again later.</string>
 
     <string name="snack_download_failed">The download failed. Please check your internet connection and try again later.</string>
@@ -155,4 +155,13 @@
     <string name="info_dialog_title">Did you know?</string>
     <string name="info_dialog_message">risingOS updates are full installation packages. That means you can always install only the latest update, even if you skipped some in between!</string>
     <string name="info_dialog_ok">Thanks for the info!</string>
+
+    <string name="maybe_later">Perhaps tomorrow?</string>
+    <string name="bunny">Okay! Maybe next week?</string>
+    <string name="nothing">Still nothing..</string>
+    <string name="hit">Bingo! Jackpot located.</string>
+    <string name="check_for_updates">Check for updates</string>
+    <string name="about_this_update">About this update</string>
+    <string name="notes">Notes</string>
+    <string name="update_notes">∘ Keep your phone connected to a network throughout the update.\n∘ Make sure your device has at least 30% battery.\n∘ Do not use your phone or device until the update is complete.</string>
 </resources>
