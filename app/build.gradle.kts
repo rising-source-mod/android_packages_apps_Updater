@@ -30,12 +30,13 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
+    namespace = "com.rising.updater"
 
     defaultConfig {
         applicationId = "com.rising.updater"
         minSdk = 30
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
     }
