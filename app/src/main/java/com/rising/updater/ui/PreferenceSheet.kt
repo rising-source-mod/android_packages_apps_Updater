@@ -47,11 +47,11 @@ class PreferenceSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(view) {
-            preferencesAbPerfMode = findViewById(R.id.preferences_ab_perf_mode)
-            preferencesAutoDeleteUpdates = findViewById(R.id.preferences_auto_delete_updates)
-            preferencesMeteredNetworkWarning = findViewById(R.id.preferences_metered_network_warning)
-            preferencesUpdateRecovery = findViewById(R.id.preferences_update_recovery)
-            preferencesAutoUpdatesCheckInterval = findViewById(R.id.preferences_auto_updates_check_interval)
+            preferencesAbPerfMode = requireViewById(R.id.preferences_ab_perf_mode)
+            preferencesAutoDeleteUpdates = requireViewById(R.id.preferences_auto_delete_updates)
+            preferencesMeteredNetworkWarning = requireViewById(R.id.preferences_metered_network_warning)
+            preferencesUpdateRecovery = requireViewById(R.id.preferences_update_recovery)
+            preferencesAutoUpdatesCheckInterval = requireViewById(R.id.preferences_auto_updates_check_interval)
         }
 
         if (!Utils.isABDevice() || Utils.isABPerfModeForceEnabled(requireContext())) {

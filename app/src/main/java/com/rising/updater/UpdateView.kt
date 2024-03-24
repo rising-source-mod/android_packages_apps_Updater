@@ -101,14 +101,14 @@ class UpdateView : LinearLayout {
 
     init {
         inflate(context, R.layout.update_layout, this)
-        noUpdates = findViewById(R.id.no_updates)
-        notesTitle = findViewById(R.id.notesTitle)
-        notesSummary = findViewById(R.id.notesSummary)
-        chipHeader = findViewById(R.id.updateChipHeader)
-        chipDateCurrent = findViewById(R.id.chipDateCurrent)
-        chipDateTarget = findViewById(R.id.chipDateTarget)
-        moreChangelog = findViewById(R.id.fullChangelog)
-        updateContainer = findViewById(R.id.update_container)
+        noUpdates = requireViewById(R.id.no_updates)
+        notesTitle = requireViewById(R.id.notesTitle)
+        notesSummary = requireViewById(R.id.notesSummary)
+        chipHeader = requireViewById(R.id.updateChipHeader)
+        chipDateCurrent = requireViewById(R.id.chipDateCurrent)
+        chipDateTarget = requireViewById(R.id.chipDateTarget)
+        moreChangelog = requireViewById(R.id.fullChangelog)
+        updateContainer = requireViewById(R.id.update_container)
     }
 
     fun noUpdates() {
@@ -121,8 +121,8 @@ class UpdateView : LinearLayout {
     }
 
     fun unleashTheBunny(resID: Int) {
-        findViewById<TextView>(R.id.easterBunny).setText(resID)
-        Handler().postDelayed({ findViewById<TextView>(R.id.easterBunny).setText(R.string.maybe_later) }, 2000)
+        requireViewById<TextView>(R.id.easterBunny).setText(resID)
+        Handler().postDelayed({ requireViewById<TextView>(R.id.easterBunny).setText(R.string.maybe_later) }, 2000)
     }
 
     fun lateInit() {
@@ -171,23 +171,23 @@ class UpdateView : LinearLayout {
 
     fun setupControlViews(actionCheck: RelativeLayout, actionStart: RelativeLayout, actionProgress: RelativeLayout, actionOptions: LinearLayout, actionInstall: RelativeLayout, actionReboot: RelativeLayout, actionDelete: RelativeLayout) {
         this.actionCheck = actionCheck
-        this.actionCheckButton = actionCheck.findViewById(R.id.actionCheckButton)
+        this.actionCheckButton = actionCheck.requireViewById(R.id.actionCheckButton)
         this.actionStart = actionStart
-        this.actionStartButton = actionStart.findViewById(R.id.actionStartButton)
+        this.actionStartButton = actionStart.requireViewById(R.id.actionStartButton)
         this.actionProgress = actionProgress
-        this.actionProgressBar = actionProgress.findViewById(R.id.updateProgressBar)
-        this.actionProgressText = actionProgress.findViewById(R.id.updateProgressText)
-        this.actionProgressStats = actionProgress.findViewById(R.id.updateStats)
-        this.actionProgressPause = actionProgress.findViewById(R.id.updatePause)
+        this.actionProgressBar = actionProgress.requireViewById(R.id.updateProgressBar)
+        this.actionProgressText = actionProgress.requireViewById(R.id.updateProgressText)
+        this.actionProgressStats = actionProgress.requireViewById(R.id.updateStats)
+        this.actionProgressPause = actionProgress.requireViewById(R.id.updatePause)
         this.actionOptions = actionOptions
-        this.actionCancel = actionOptions.findViewById(R.id.actionCancel)
-        this.actionResume = actionOptions.findViewById(R.id.actionResume)
+        this.actionCancel = actionOptions.requireViewById(R.id.actionCancel)
+        this.actionResume = actionOptions.requireViewById(R.id.actionResume)
         this.actionInstall = actionInstall
-        this.actionInstallButton = actionInstall.findViewById(R.id.actionInstallButton)
+        this.actionInstallButton = actionInstall.requireViewById(R.id.actionInstallButton)
         this.actionReboot = actionReboot
-        this.actionRebootButton = actionReboot.findViewById(R.id.actionRebootButton)
+        this.actionRebootButton = actionReboot.requireViewById(R.id.actionRebootButton)
         this.actionDelete = actionDelete
-        this.actionDeleteButton = actionDelete.findViewById(R.id.actionDeleteButton)
+        this.actionDeleteButton = actionDelete.requireViewById(R.id.actionDeleteButton)
     }
 
     private fun initListeners() {
@@ -423,7 +423,7 @@ class UpdateView : LinearLayout {
             return
         }
         val checkboxView = LayoutInflater.from(mActivity).inflate(R.layout.checkbox_view, null)
-        val checkbox = checkboxView.findViewById<View>(R.id.checkbox) as CheckBox
+        val checkbox = checkboxView.requireViewById<View>(R.id.checkbox) as CheckBox
         checkbox.setText(R.string.checkbox_metered_network_warning)
         AlertDialog.Builder(mActivity!!)
                 .setTitle(R.string.update_over_metered_network_title)
@@ -624,7 +624,7 @@ class UpdateView : LinearLayout {
                 .setPositiveButton(android.R.string.ok, null)
                 .setMessage(message)
                 .show()
-        val textView = infoDialog?.findViewById<View>(android.R.id.message) as TextView?
+        val textView = infoDialog?.requireViewById<View>(android.R.id.message) as TextView?
         textView!!.movementMethod = LinkMovementMethod.getInstance()
     }
 
