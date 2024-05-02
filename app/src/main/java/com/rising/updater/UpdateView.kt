@@ -42,6 +42,8 @@ import com.rising.updater.model.UpdateInfo
 import com.rising.updater.model.UpdateStatus
 import java.io.File
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Path
 import java.sql.Timestamp
 import java.text.DateFormat
 import java.text.NumberFormat
@@ -519,6 +521,12 @@ class UpdateView : LinearLayout {
                     .setMessage(message)
                     .setPositiveButton(android.R.string.ok, null)
         }
+        if (isScratchMounted) {
+            return AlertDialog.Builder(mActivity!!)
+                    .setTitle(R.string.dialog_scratch_mounted_title)
+                    .setMessage(R.string.dialog_scratch_mounted_message)
+                    .setPositiveButton(android.R.string.ok, null);
+        }
         val update = mUpdaterController!!.getUpdate(downloadId)
         val resId: Int
         resId = try {
@@ -640,6 +648,15 @@ class UpdateView : LinearLayout {
             val plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0)
             val required = if (plugged and BATTERY_PLUGGED_ANY != 0) mActivity!!.resources.getInteger(R.integer.battery_ok_percentage_charging) else mActivity!!.resources.getInteger(R.integer.battery_ok_percentage_discharging)
             return percent >= required
+        }
+
+    private val isScratchMounted: Boolean
+        get() {
+            var mounted = false
+            Files.lines(Path.of("/proc/mounts")).use {
+                mounted = it.anyMatch { x -> x.split(" ")[1].equals("/mnt/scratch") }
+            }
+            return mounted
         }
 
     enum class Action {
