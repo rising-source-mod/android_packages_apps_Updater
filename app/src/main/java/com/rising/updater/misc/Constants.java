@@ -42,6 +42,7 @@ public final class Constants {
     public static final String PROP_BUILD_DATE = "ro.build.date.utc";
     public static final String PROP_BUILD_VERSION = "ro.rising.version";
     public static final String PROP_DEVICE = "ro.rising.device";
+    public static final String PROP_PACKAGE_TYPE = "ro.rising.packagetype";
     public static final String PROP_NEXT_DEVICE = "ro.updater.next_device";
     public static final String PROP_UPDATER_ALLOW_DOWNGRADING = "rising.updater.allow_downgrading";
 

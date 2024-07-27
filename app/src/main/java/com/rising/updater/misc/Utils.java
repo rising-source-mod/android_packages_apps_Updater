@@ -165,10 +165,22 @@ public class Utils {
     }
 
     public static String getServerURL(Context context) {
-        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(Constants.PROP_DEVICE));
+        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE, SystemProperties.get(Constants.PROP_DEVICE));
+        String packageType = SystemProperties.get(Constants.PROP_PACKAGE_TYPE);
+        String serverUrl;
 
-        String serverUrl = context.getString(R.string.updater_server_url);
+        switch (packageType) {
+            case "GAPPS":
+                serverUrl = context.getString(R.string.updater_server_url_gapps);
+                break;
+            case "CORE":
+                serverUrl = context.getString(R.string.updater_server_url_core);
+                break;
+            case "VANILLA":
+            default:
+                serverUrl = context.getString(R.string.updater_server_url_vanilla);
+                break;
+        }
 
         return serverUrl.replace("{device}", device);
     }
