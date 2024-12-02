@@ -66,6 +66,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
@@ -220,6 +221,10 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
             findViewById(R.id.refresh).setOnClickListener(v -> downloadUpdatesList(true));
             findViewById(R.id.preferences).setOnClickListener(v -> showPreferencesDialog());
         }
+        FloatingActionButton fabRefresh = findViewById(R.id.fab_refresh);
+        fabRefresh.setOnClickListener(view -> downloadUpdatesList(true));
+        FloatingActionButton fabLocalUpdate = findViewById(R.id.fab_local_update);
+        fabLocalUpdate.setOnClickListener(view -> mUpdateImporter.openImportPicker());
     }
 
     @Override
@@ -693,7 +698,10 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
 
     @Override
     public void showSnackbar(int stringId, int duration) {
-        Snackbar.make(findViewById(R.id.main_container), stringId, duration).show();
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.main_container), stringId, duration);
+        snackbar.setAnchorView(R.id.fab_refresh);
+        snackbar.show();
+        
     }
 
     private void refreshAnimationStart() {

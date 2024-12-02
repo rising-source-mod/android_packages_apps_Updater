@@ -242,4 +242,26 @@
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/update_item_view" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/menu_refresh"
+        android:src="@drawable/ic_menu_refresh"
+        android:layout_gravity="bottom|start"
+        app:backgroundTint="?android:attr/colorAccent"
+        app:tint="@*android:color/white"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_local_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/local_update_import"
+        android:src="@drawable/ic_local_update"
+        android:layout_gravity="bottom|end"
+        app:backgroundTint="?android:attr/colorAccent"
+        app:tint="@*android:color/white"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
