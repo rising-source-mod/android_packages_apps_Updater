@@ -35,6 +35,7 @@ import android.os.IBinder;
 import android.os.SystemProperties;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +68,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
@@ -100,6 +102,10 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
     private boolean mIsTV;
 
     private UpdateInfo mToBeExported = null;
+
+    private CircularProgressIndicator progressDownload;
+    private CircularProgressIndicator progressLocalUpdate;
+
     private final ActivityResultLauncher<Intent> mExportUpdate = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -139,16 +145,22 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                String downloadId = intent.getStringExtra(UpdaterController.EXTRA_DOWNLOAD_ID);
+                UpdateInfo update = mUpdaterService.getUpdaterController().getUpdate(downloadId);
                 if (UpdaterController.ACTION_UPDATE_STATUS.equals(intent.getAction())) {
-                    String downloadId = intent.getStringExtra(UpdaterController.EXTRA_DOWNLOAD_ID);
                     handleDownloadStatusChange(downloadId);
                     mAdapter.notifyItemChanged(downloadId);
-                } else if (UpdaterController.ACTION_DOWNLOAD_PROGRESS.equals(intent.getAction()) ||
-                        UpdaterController.ACTION_INSTALL_PROGRESS.equals(intent.getAction())) {
-                    String downloadId = intent.getStringExtra(UpdaterController.EXTRA_DOWNLOAD_ID);
-                    mAdapter.notifyItemChanged(downloadId);
+                } else if (UpdaterController.ACTION_DOWNLOAD_PROGRESS.equals(intent.getAction())) {
+                    if (update != null) {
+                        mAdapter.notifyItemChanged(downloadId);
+                        updateDownloadProgress(progressDownload, update);
+                    }
+                } else if (UpdaterController.ACTION_INSTALL_PROGRESS.equals(intent.getAction())) {
+                    if (update != null) {
+                        mAdapter.notifyItemChanged(downloadId);
+                        updateInstallProgress(progressLocalUpdate, update);
+                    }
                 } else if (UpdaterController.ACTION_UPDATE_REMOVED.equals(intent.getAction())) {
-                    String downloadId = intent.getStringExtra(UpdaterController.EXTRA_DOWNLOAD_ID);
                     mAdapter.removeItem(downloadId);
                 }
             }
@@ -222,9 +234,23 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
             findViewById(R.id.preferences).setOnClickListener(v -> showPreferencesDialog());
         }
         FloatingActionButton fabRefresh = findViewById(R.id.fab_refresh);
-        fabRefresh.setOnClickListener(view -> downloadUpdatesList(true));
+        fabRefresh.setOnClickListener(view -> {
+            fabRefresh.performHapticFeedback(
+                    HapticFeedbackConstants.VIRTUAL_KEY,
+                    HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+            );
+            downloadUpdatesList(true);
+        });
         FloatingActionButton fabLocalUpdate = findViewById(R.id.fab_local_update);
-        fabLocalUpdate.setOnClickListener(view -> mUpdateImporter.openImportPicker());
+        fabLocalUpdate.setOnClickListener(view -> {
+            fabLocalUpdate.performHapticFeedback(
+                    HapticFeedbackConstants.VIRTUAL_KEY,
+                    HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+            );
+            mUpdateImporter.openImportPicker();
+        });
+        progressDownload = findViewById(R.id.progress_download);
+        progressLocalUpdate = findViewById(R.id.progress_local_update);
     }
 
     @Override
@@ -663,15 +689,23 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
         }
 
         UpdateInfo update = mUpdaterService.getUpdaterController().getUpdate(downloadId);
+        if (update == null) {
+            return;
+        }
         switch (update.getStatus()) {
             case PAUSED_ERROR:
                 showSnackbar(R.string.snack_download_failed, Snackbar.LENGTH_LONG);
+                hideProgressBars();
                 break;
             case VERIFICATION_FAILED:
                 showSnackbar(R.string.snack_download_verification_failed, Snackbar.LENGTH_LONG);
+                hideProgressBars();
                 break;
             case VERIFIED:
                 showSnackbar(R.string.snack_download_verified, Snackbar.LENGTH_LONG);
+                hideProgressBars();
+                break;
+            default:
                 break;
         }
     }
@@ -734,6 +768,41 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
             } else {
                 findViewById(R.id.no_new_updates_view).setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    private void updateDownloadProgress(CircularProgressIndicator progressDownload, UpdateInfo update) {
+        int progress = update.getProgress();
+        runOnUiThread(() -> {
+            if (progressDownload.getVisibility() != View.VISIBLE) {
+                progressDownload.setVisibility(View.VISIBLE);
+            }
+            progressDownload.setProgressCompat(progress, true);
+            if (progress == 100) {
+                progressDownload.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void updateInstallProgress(CircularProgressIndicator progressLocalUpdate, UpdateInfo update) {
+        int progress = update.getInstallProgress();
+        runOnUiThread(() -> {
+            if (progressLocalUpdate.getVisibility() != View.VISIBLE) {
+                progressLocalUpdate.setVisibility(View.VISIBLE);
+            }
+            progressLocalUpdate.setProgressCompat(progress, true);
+            if (progress == 100) {
+                progressLocalUpdate.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void hideProgressBars() {
+        if (progressDownload != null) {
+            progressDownload.setVisibility(View.GONE);
+        }
+        if (progressLocalUpdate != null) {
+            progressLocalUpdate.setVisibility(View.GONE);
         }
     }
 

@@ -243,25 +243,63 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/update_item_view" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_refresh"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/menu_refresh"
-        android:src="@drawable/ic_menu_refresh"
         android:layout_gravity="bottom|start"
-        app:backgroundTint="?android:attr/colorAccent"
-        app:tint="@*android:color/white"/>
+        android:layout_margin="16dp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_local_update"
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:indicatorSize="62dp"
+            app:indicatorInset="0dp"
+            app:indicatorColor="@*android:color/system_accent3_600"
+            app:trackThickness="4dp"
+            app:trackColor="@*android:color/white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/menu_refresh"
+            android:src="@drawable/ic_menu_refresh"
+            app:backgroundTint="?android:attr/colorAccent"
+            app:tint="@*android:color/white"/>
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/local_update_import"
-        android:src="@drawable/ic_local_update"
         android:layout_gravity="bottom|end"
-        app:backgroundTint="?android:attr/colorAccent"
-        app:tint="@*android:color/white"/>
+        android:layout_margin="16dp">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_local_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:indicatorSize="62dp"
+            app:indicatorInset="0dp"
+            app:indicatorColor="@*android:color/system_accent3_600"
+            app:trackThickness="4dp"
+            app:trackColor="@*android:color/white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_local_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/local_update_import"
+            android:src="@drawable/ic_local_update"
+            app:backgroundTint="?android:attr/colorAccent"
+            app:tint="@*android:color/white"/>
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
