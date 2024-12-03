@@ -51,6 +51,8 @@
     <string name="suspend_button">Suspend</string>
 
     <string name="installing_update">Installing update package</string>
+    <string name="update_installing_progress">Installing update... (%1$d%%)</string>
+    <string name="install_progress_text">Installing... (%1$d%%)</string>
     <string name="installing_update_error">Install error</string>
     <string name="installing_update_finished">Update installed</string>
     <string name="finalizing_package">Finalizing package installation</string>
@@ -89,7 +91,7 @@
 
     <string name="snack_updates_found">New updates found</string>
     <string name="snack_no_updates_found">No new updates found</string>
-    <string name="snack_updates_check_failed">The update check failed. Please check your internet connection and try again later.</string>
+    <string name="snack_updates_check_failed">Update check failed. Possible missing ota json or no internet connection, please check and try again.</string>
 
     <string name="snack_download_failed">The download failed. Please check your internet connection and try again later.</string>
     <string name="snack_download_verification_failed">The update verification failed.</string>

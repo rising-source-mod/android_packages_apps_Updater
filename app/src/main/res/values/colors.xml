@@ -10,4 +10,5 @@
 
     <color name="inverted">#212121</color>
     <color name="ic_background">#333333</color>
+    <color name="snackbar_background">#323232</color>
 </resources>

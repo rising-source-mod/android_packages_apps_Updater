@@ -41,6 +41,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -734,14 +735,26 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
     public void showSnackbar(int stringId, int duration) {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.main_container), stringId, duration);
         snackbar.setAnchorView(R.id.fab_refresh);
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundTintList(getColorStateList(R.color.snackbar_background));
+        snackbarView.setElevation(6f);
+        snackbarView.setBackground(getDrawable(R.drawable.snackbar_background));
+        TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        textView.setTextColor(getResources().getColor(android.R.color.white));
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) snackbarView.getLayoutParams();
+        params.bottomMargin += getResources().getDimensionPixelSize(R.dimen.snackbar_spacing);
+        params.leftMargin += getResources().getDimensionPixelSize(R.dimen.snackbar_horizontal_margin);
+        params.rightMargin += getResources().getDimensionPixelSize(R.dimen.snackbar_horizontal_margin);
+        snackbarView.setLayoutParams(params);
         snackbar.show();
-        
     }
 
     private void refreshAnimationStart() {
         if (!mIsTV) {
             if (mRefreshIconView == null) {
                 mRefreshIconView = findViewById(R.id.menu_refresh);
+                mRefreshIconView = findViewById(R.id.fab_refresh);
             }
             if (mRefreshIconView != null) {
                 mRefreshAnimation.setRepeatCount(Animation.INFINITE);
