@@ -38,6 +38,15 @@
             app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
             app:toolbarId="@id/action_bar">
 
+            <ImageView
+                android:layout_width="127dp"
+                android:layout_height="112dp"
+                android:layout_gravity="right|center"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_rising"
+                android:visibility="visible" />
+
             <RelativeLayout
                 android:id="@+id/header_container"
                 android:layout_width="match_parent"
@@ -65,7 +74,7 @@
                     android:layout_below="@id/header_title"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp"
-                    tools:text="Android 13"/>
+                    tools:text="Android 15"/>
 
                 <TextView
                     android:id="@+id/header_build_date"
@@ -117,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/support_links"
                         android:textColor="?android:attr/textColorPrimary"
-                        android:textSize="12sp" />
+                        android:textSize="16sp" />
 
                     <LinearLayout 
                         android:layout_width="match_parent"
@@ -130,8 +139,8 @@
                             android:layout_margin="2dp"
                             android:cropToPadding="true"
                             android:scaleType="fitXY"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:clickable="true"
                             android:src="@drawable/ic_forum"/>
 
@@ -140,8 +149,8 @@
                             android:layout_margin="2dp"
                             android:cropToPadding="true"
                             android:scaleType="fitXY"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:clickable="true"
                             android:src="@drawable/ic_telegram"/>
 
@@ -150,8 +159,8 @@
                             android:layout_margin="2dp"
                             android:cropToPadding="true"
                             android:scaleType="fitXY"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:clickable="true"
                             android:src="@drawable/ic_recovery"/>
 
@@ -160,8 +169,8 @@
                             android:layout_margin="2dp"
                             android:cropToPadding="true"
                             android:scaleType="fitXY"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:clickable="true"
                             android:src="@drawable/ic_paypal"/>
 
@@ -170,8 +179,8 @@
                             android:layout_margin="2dp"
                             android:cropToPadding="true"
                             android:scaleType="fitXY"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:clickable="true"
                             android:src="@drawable/ic_gapps"/>
 
@@ -180,8 +189,8 @@
                             android:layout_margin="2dp"
                             android:cropToPadding="true"
                             android:scaleType="fitXY"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:clickable="true"
                             android:src="@drawable/ic_firmware"/>
 
@@ -190,8 +199,8 @@
                             android:layout_margin="2dp"
                             android:cropToPadding="true"
                             android:scaleType="fitXY"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:clickable="true"
                             android:src="@drawable/ic_modem"/>
 
@@ -200,8 +209,8 @@
                             android:layout_margin="2dp"
                             android:cropToPadding="true"
                             android:scaleType="fitXY"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:clickable="true"
                             android:src="@drawable/ic_bootloader"/>
                     </LinearLayout>
