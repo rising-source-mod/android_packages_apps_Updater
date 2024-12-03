@@ -234,11 +234,11 @@
         android:padding="46dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
+        <com.rising.updater.RandomMessageTextView
+            android:id="@+id/no_updates_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/list_no_updates"
             android:textColor="?android:textColorSecondary" />
     </androidx.core.widget.NestedScrollView>
 

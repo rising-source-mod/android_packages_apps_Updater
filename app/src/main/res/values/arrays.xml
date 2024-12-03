@@ -21,4 +21,17 @@
         <item>@string/menu_auto_updates_check_interval_weekly</item>
         <item>@string/menu_auto_updates_check_interval_monthly</item>
     </string-array>
+
+    <string-array name="no_updates_messages">
+        <item>No updates available, try again later.</item>
+        <item>Too soon, get some coffee and try again later.</item>
+        <item>Hi, We know you love us, but please be patient.</item>
+        <item>Nothing new for now, but we\'ll keep you posted!</item>
+        <item>You\'re all caught up. Relax and enjoy!</item>
+        <item>Checking again? Good things take time!</item>
+        <item>Sorry, no updates yet. Maybe try a restart?</item>
+        <item>No updates found, but your patience is appreciated.</item>
+        <item>Still no updates. Why not try a walk?</item>
+        <item>Oops! Updates are on vacation. Check back later.</item>
+    </string-array>
 </resources>
