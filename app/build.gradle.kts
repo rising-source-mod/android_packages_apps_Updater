@@ -81,6 +81,7 @@ android {
             }
         }
     }
+    namespace = "com.rising.updater"
 }
 
 dependencies {
