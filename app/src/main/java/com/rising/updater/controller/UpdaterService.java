@@ -183,6 +183,7 @@ public class UpdaterService extends Service {
                         mUpdaterController);
                 installer.reconnect();
             }
+            return START_STICKY;
         } else if (ACTION_DOWNLOAD_CONTROL.equals(intent.getAction())) {
             String downloadId = intent.getStringExtra(EXTRA_DOWNLOAD_ID);
             int action = intent.getIntExtra(EXTRA_DOWNLOAD_CONTROL, -1);
@@ -196,8 +197,14 @@ public class UpdaterService extends Service {
         } else if (ACTION_INSTALL_UPDATE.equals(intent.getAction())) {
             String downloadId = intent.getStringExtra(EXTRA_DOWNLOAD_ID);
             UpdateInfo update = mUpdaterController.getUpdate(downloadId);
+            if (update == null) {
+                Log.e(TAG, "Update not found for ID: " + downloadId);
+                return START_NOT_STICKY;
+            }
+            
             if (update.getPersistentStatus() != UpdateStatus.Persistent.VERIFIED) {
-                throw new IllegalArgumentException(update.getDownloadId() + " is not verified");
+                Log.e(TAG, "Update is not verified: " + update.getDownloadId());
+                return START_NOT_STICKY;
             }
             try {
                 if (Utils.isABUpdate(update.getFile())) {

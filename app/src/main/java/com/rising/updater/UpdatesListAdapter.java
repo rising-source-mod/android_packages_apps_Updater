@@ -183,6 +183,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             viewHolder.mProgressBar.setIndeterminate(update.getStatus() == UpdateStatus.STARTING);
             viewHolder.mProgressBar.setProgress(update.getProgress());
         } else if (mUpdaterController.isInstallingUpdate(downloadId)) {
+            saveUpdateState(downloadId, UpdateStatus.INSTALLING);
             setButtonAction(viewHolder.mAction, Action.CANCEL_INSTALLATION, downloadId, true);
             boolean notAB = !mUpdaterController.isInstallingABUpdate();
             viewHolder.mProgressText.setText(notAB ? R.string.dialog_prepare_zip_message :
@@ -620,5 +621,13 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         } catch (IOException e) {
             return false;
         }
+    }
+
+    private void saveUpdateState(String downloadId, UpdateStatus status) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        prefs.edit()
+            .putString("current_update_id", downloadId)
+            .putString("current_update_status", status.name())
+            .apply();
     }
 }

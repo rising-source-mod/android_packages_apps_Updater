@@ -36,6 +36,7 @@ import android.os.SystemProperties;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,6 +83,7 @@ import com.rising.updater.misc.StringGenerator;
 import com.rising.updater.misc.Utils;
 import com.rising.updater.model.Update;
 import com.rising.updater.model.UpdateInfo;
+import com.rising.updater.model.UpdateStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -288,13 +290,35 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
 
     @Override
     protected void onPause() {
-        if (importDialog != null) {
-            importDialog.dismiss();
-            importDialog = null;
-            mUpdateImporter.stopImport();
+        if (importDialog != null && importDialog.isShowing()) {
+            importDialog.hide();
         }
 
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (importDialog != null && !importDialog.isShowing()) {
+            importDialog.show();
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String downloadId = prefs.getString("current_update_id", null);
+        String statusName = prefs.getString("current_update_status", null);
+
+        if (downloadId != null && statusName != null) {
+            UpdateStatus status = UpdateStatus.valueOf(statusName);
+            UpdateInfo update = mUpdaterService.getUpdaterController().getUpdate(downloadId);
+
+            if (update != null) {
+                // Restore the UI state
+                mAdapter.notifyItemChanged(downloadId);
+                if (status == UpdateStatus.INSTALLING) {
+                    updateInstallProgress(progressLocalUpdate, update);
+                }
+            }
+        }
     }
 
     @Override
@@ -347,23 +371,42 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
             importDialog.dismiss();
         }
 
-        importDialog = ProgressDialog.show(this, getString(R.string.local_update_import),
-                getString(R.string.local_update_import_progress), true, false);
+        importDialog = new ProgressDialog(this);
+        importDialog.setTitle(getString(R.string.local_update_import));
+        importDialog.setMessage(getString(R.string.local_update_import_progress));
+        importDialog.setCanceledOnTouchOutside(false);
+        importDialog.setOnKeyListener((dialog, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                return true;
+            }
+            return false;
+        });
+        importDialog.show();
     }
 
     @Override
     public void onImportCompleted(Update update) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit().remove("current_update_id").remove("current_update_status").apply();
         if (importDialog != null) {
             importDialog.dismiss();
             importDialog = null;
         }
 
         if (update == null) {
-            new AlertDialog.Builder(this)
+            AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.local_update_import)
                     .setMessage(R.string.local_update_import_failure)
                     .setPositiveButton(android.R.string.ok, null)
-                    .show();
+                    .create();
+              dialog.setCanceledOnTouchOutside(false);
+              dialog.setOnKeyListener((d, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    return true;
+                }
+                return false;
+            });
+            dialog.show();
             return;
         }
 
@@ -372,18 +415,26 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
         final Runnable deleteUpdate = () -> UpdaterController.getInstance(this)
                 .deleteUpdate(update.getDownloadId());
 
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.local_update_import)
                 .setMessage(getString(R.string.local_update_import_success, update.getVersion()))
-                .setPositiveButton(R.string.local_update_import_install, (dialog, which) -> {
+                .setPositiveButton(R.string.local_update_import_install, (d, which) -> {
                     mAdapter.addItem(update.getDownloadId());
                     // Update UI
                     getUpdatesList();
                     Utils.triggerUpdate(this, update.getDownloadId());
                 })
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> deleteUpdate.run())
-                .setOnCancelListener((dialog) -> deleteUpdate.run())
-                .show();
+                .setNegativeButton(android.R.string.cancel, (d, which) -> deleteUpdate.run())
+                .setOnCancelListener((d) -> deleteUpdate.run())
+                .create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.setOnKeyListener((d, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        return true;
+                    }
+                    return false;
+                });
+                dialog.show();
     }
 
     private final ServiceConnection mConnection = new ServiceConnection() {
