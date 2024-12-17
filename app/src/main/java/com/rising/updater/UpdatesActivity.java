@@ -132,6 +132,12 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updates);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit()
+            .remove("current_update_id")
+            .remove("current_update_status")
+            .apply();
+
         mUpdateImporter = new UpdateImporter(this, this);
 
         UiModeManager uiModeManager = getSystemService(UiModeManager.class);
@@ -276,6 +282,12 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
     @Override
     public void onStart() {
         super.onStart();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit()
+            .remove("current_update_id")
+            .remove("current_update_status")
+            .apply();
+        Log.d(TAG, "Cleared update state to start fresh.");
         Intent intent = new Intent(this, UpdaterService.class);
         startService(intent);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -307,17 +319,30 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
         String downloadId = prefs.getString("current_update_id", null);
         String statusName = prefs.getString("current_update_status", null);
 
-        if (downloadId != null && statusName != null) {
-            UpdateStatus status = UpdateStatus.valueOf(statusName);
-            UpdateInfo update = mUpdaterService.getUpdaterController().getUpdate(downloadId);
+        if (downloadId == null && statusName == null) {
+            Log.d(TAG, "No update process to resume");
+            return;
+        }
 
-            if (update != null) {
-                // Restore the UI state
-                mAdapter.notifyItemChanged(downloadId);
-                if (status == UpdateStatus.INSTALLING) {
-                    updateInstallProgress(progressLocalUpdate, update);
+        try {
+            UpdateStatus status = UpdateStatus.valueOf(statusName);
+            if (mUpdaterService != null) {
+                UpdateInfo update = mUpdaterService.getUpdaterController().getUpdate(downloadId);
+
+                if (update != null) {
+                    // Restore the UI state
+                    mAdapter.notifyItemChanged(downloadId);
+                    if (status == UpdateStatus.INSTALLING) {
+                        updateInstallProgress(progressLocalUpdate, update);
+                    }
+                } else {
+                    Log.e(TAG, "No update found for downloadId: " + downloadId);
                 }
+            } else {
+                Log.e(TAG, "UpdaterService is not initialized yet.");
             }
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Invalid update status: " + statusName, e);
         }
     }
 
