@@ -110,7 +110,7 @@
                     android:textSize="12sp"
                     tools:text="Last checked: 1970-01-01"/>
 
-                <LinearLayout 
+                <LinearLayout
                     android:id="@+id/support_icons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="16sp" />
 
-                    <LinearLayout 
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -279,7 +279,9 @@
             android:contentDescription="@string/menu_refresh"
             android:src="@drawable/ic_menu_refresh"
             app:backgroundTint="?android:attr/colorAccent"
-            app:tint="@*android:color/white"/>
+            app:tint="@*android:color/white"
+            app:elevation="0dp"
+            app:useCompatPadding="false"/>
     </FrameLayout>
 
     <FrameLayout
@@ -309,6 +311,8 @@
             android:contentDescription="@string/local_update_import"
             android:src="@drawable/ic_local_update"
             app:backgroundTint="?android:attr/colorAccent"
-            app:tint="@*android:color/white"/>
+            app:tint="@*android:color/white"
+            app:elevation="0dp"
+            app:useCompatPadding="false"/>
     </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
